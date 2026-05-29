@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="hero-section">
+    <video autoplay muted loop playsinline class="hero-video">
+        <source src="{% static 'videos/emira.mp4' %}" type="video/mp4">
+    </video>
+    <div class="hero-content">
+        <h1 class="hero-title">Lotus Cars</h1>
+        <p class="hero-subtitle">PURE PERFORMANCE PEDIGREE SINCE 1948</p>
+        <a href="/cars/" class="hero-btn">Explore Models</a>
+    </div>
+</div>
+
+<div class="home-models-preview">
+    <h2 class="section-title">The Future of Driving</h2>
+    <p class="section-text" style="margin-bottom: 45px;">
+        Discover the new era of Lotus performance — from the track-tuned Emira to the pure electric hyper-SUV Eletre.
+    </p>
+
+    <div class="video-slider-container">
+
+        <div class="slider-video-wrapper">
+            <video id="sliderVideo" autoplay muted loop playsinline src="" style="opacity: 0; transition: opacity 0.4s ease-in-out;"></video>
+            <div class="video-overlay"></div>
+        </div>
+
+        <button class="slider-arrow arrow-prev" onclick="changeSlide(-1)">‹</button>
+        <button class="slider-arrow arrow-next" onclick="changeSlide(1)">›</button>
+
+        <div class="slider-content-box" id="sliderContentBox" style="opacity: 0; transition: opacity 0.3s ease-in-out;">
+            <span id="slideBadge" class="slide-status-badge">• LOADING</span>
+            <h1 id="slideTitle" class="slide-title" style="margin-bottom: 35px;">Lotus Model</h1>
+
+            <div class="slide-actions">
+                <a id="slideDetailsBtn" href="#" class="btn-details">Details</a>
+                <button id="slideOrderBtn" class="btn-order" onclick="openOrderModalFromSlider()">Order</button>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 50px;">
+        <a href="/cars/" class="btn-view-all">VIEW ALL MODELS &rarr;</a>
+    </div>
+</div>
+
+<div id="orderModal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeOrderModal()">&times;</button>
+        <h2>Замовити автомобіль</h2>
+        <p id="modalCarName" style="color: #fdd835; font-weight: 700; font-size: 1.2rem; margin: 5px 0 20px; font-family: sans-serif;"></p>
+
+        <form method="post" class="modal-form">
+            {% csrf_token %}
+            <input type="hidden" name="car_title" id="hiddenCarTitle">
+            <input type="text" name="name" placeholder="Ваше ім'я" required>
+            <input type="tel" name="phone" placeholder="Номер телефону" required>
+            <textarea name="message" placeholder="Я зацікавлений у покупці цього автомобіля..."></textarea>
+            <button type="submit" class="submit-btn">Надіслати заявку</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .hero-section { position: relative; width: 100%; height: 75vh; background: #000; display: flex; align-items: center; padding-left: 8%; box-sizing: border-box; overflow: hidden; }
+    .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: 0.6; }
+    .hero-content { position: relative; z-index: 10; font-family: sans-serif; text-align: left; }
+    .hero-title { color: #fff; font-size: 70px; font-weight: 800; margin: 0 0 10px; }
+    .hero-subtitle { color: #ccc; font-size: 18px; letter-spacing: 1px; margin: 0 0 35px; text-transform: uppercase; }
+    .hero-btn { display: inline-block; color: #fff; border: 2px solid #fff; padding: 14px 35px; font-size: 13px; font-weight: 700; text-decoration: none; text-transform: uppercase; border-radius: 6px; transition: all 0.3s ease; }
+    .hero-btn:hover { background: #fff; color: #000; }
+
+    .home-models-preview { background-color: #000; padding: 80px 20px; text-align: center; font-family: sans-serif; }
+    .section-title { color: #fff; font-size: 38px; font-weight: 700; margin: 0 0 15px; }
+    .section-text { color: #888; font-size: 16px; max-width: 650px; margin: 0 auto; line-height: 1.6; }
+
+    .video-slider-container {
+        position: relative;
+        max-width: 1100px;
+        height: 480px;
+        margin: 40px auto 0;
+        background-color: #111;
+        border: 1px solid #222;
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        text-align: left;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+    }
+    .slider-video-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+    .slider-video-wrapper video { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.25s ease-in-out; }
+    .video-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.85) 100%); }
+
+    .slider-content-box { position: relative; z-index: 10; padding-left: 60px; max-width: 500px; }
+    .slide-status-badge { display: inline-block; padding: 6px 12px; border-radius: 4px; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 15px; }
+
+    .badge-yellow { background: rgba(253, 216, 53, 0.9) !important; color: #000 !important; }
+    .badge-orange { background: rgba(255, 110, 0, 0.9) !important; color: #fff !important; box-shadow: 0 0 15px rgba(255, 110, 0, 0.4) !important; }
+    .badge-blue { background: rgba(0, 162, 255, 0.9) !important; color: #fff !important; box-shadow: 0 0 15px rgba(0, 162, 255, 0.4) !important; }
+
+    .slide-title { color: #fff; font-size: 46px; font-weight: 800; margin: 0; }
+    .slide-actions { display: flex; gap: 12px; width: 320px; }
+
+    .btn-details, .btn-order { flex: 1; text-align: center; padding: 13px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; border-radius: 6px; transition: all 0.3s ease; text-decoration: none; }
+    .btn-details { background: transparent; color: #fff; border: 1px solid #fff; }
+    .btn-details:hover { background: #fff; color: #000; }
+    .btn-order { background: #fdd835; color: #000; border: none; cursor: pointer; }
+    .btn-order:hover { background: #ffeb3b; }
+
+    .slider-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 45px; height: 45px; background: rgba(0, 0, 0, 0.6); color: white; border: 1px solid rgba(255, 255, 255, 0.1); font-size: 22px; cursor: pointer; z-index: 20; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; outline: none; }
+    .slider-arrow:hover { background: #fdd835; color: #000; border-color: #fdd835; box-shadow: 0 0 15px rgba(253, 216, 53, 0.4); }
+    .arrow-prev { left: 20px; }
+    .arrow-next { right: 20px; }
+
+    .btn-view-all { display: inline-block; color: #fdd835; text-decoration: none; font-weight: 700; font-size: 14px; border-bottom: 2px solid transparent; padding-bottom: 5px; }
+    .btn-view-all:hover { color: #fff; border-color: #fdd835; }
+
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; }
+    .modal-content { background: #141414; border: 1px solid #2b2b2b; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; position: relative; text-align: left;}
+    .modal-content h2 { color: white; margin-top: 0; font-family: sans-serif;}
+    .close-modal { position: absolute; top: 15px; right: 20px; background: transparent; color: #888; border: none; font-size: 30px; cursor: pointer; }
+    .modal-form { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+    .modal-form input, .modal-form textarea { background: #1d1d1d; border: 1px solid #333; color: white; padding: 14px; border-radius: 8px; outline: none; }
+    .submit-btn { background: #fdd835; color: black; border: none; padding: 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+</style>
+
+<script>
+    const slidesData = [
+        {% for car in cars %}
+        {
+            title: "{{ car.title }}",
+            detailsUrl: "/cars/{{ car.id }}/",
+            videoUrl: "{% if 'esprit' in car.title.lower %}{% static 'videos/esprit.mp4' %}{% elif 'eletre' in car.title.lower %}{% static 'videos/eletre.mp4' %}{% else %}{% static 'videos/emira_card.mp4' %}{% endif %}",
+            badgeText: "{% if 'esprit' in car.title.lower %}• CLASSIC LEGEND{% elif 'eletre' in car.title.lower %}• 100% ELECTRIC{% else %}• TRACK READY{% endif %}",
+            badgeClass: "{% if 'esprit' in car.title.lower %}badge-orange{% elif 'eletre' in car.title.lower %}badge-blue{% else %}badge-yellow{% endif %}"
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    let currentSlideIndex = 0;
+
+    function updateSlider() {
+        if (slidesData.length === 0) return;
+        const currentData = slidesData[currentSlideIndex];
+        const videoEl = document.getElementById('sliderVideo');
+        const contentBox = document.getElementById('sliderContentBox');
+
+        videoEl.style.opacity = 0;
+        contentBox.style.opacity = 0;
+
+        setTimeout(() => {
+            videoEl.src = currentData.videoUrl;
+
+            document.getElementById('slideTitle').innerText = currentData.title;
+            document.getElementById('slideDetailsBtn').href = currentData.detailsUrl;
+
+            const badge = document.getElementById('slideBadge');
+            badge.innerText = currentData.badgeText;
+            badge.className = "slide-status-badge " + currentData.badgeClass;
+
+            videoEl.style.opacity = 1;
+            contentBox.style.opacity = 1;
+        }, 150);
+    }
+
+    function changeSlide(direction) {
+        currentSlideIndex = (currentSlideIndex + direction + slidesData.length) % slidesData.length;
+        updateSlider();
+    }
+
+    function openOrderModalFromSlider() {
+        const currentData = slidesData[currentSlideIndex];
+        document.getElementById('modalCarName').innerText = currentData.title;
+        document.getElementById('hiddenCarTitle').value = currentData.title;
+        document.getElementById('orderModal').style.display = 'flex';
+    }
+
+    function closeOrderModal() { document.getElementById('orderModal').style.display = 'none'; }
+    window.onclick = function(event) {
+        const modal = document.getElementById('orderModal');
+        if (event.target == modal) modal.style.display = 'none';
+    }
+    setTimeout(updateSlider, 100);
+</script>
+
+{% endblock %}

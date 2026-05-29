@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div style="
+    max-width:400px;
+    margin:auto;
+    padding:20px;
+    background:#111;
+    border-radius:10px;
+">
+
+    <h1>Create account</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button style="
+            background:#e50914;
+            color:white;
+            border:none;
+            padding:10px 20px;
+            border-radius:5px;
+            cursor:pointer;
+        ">
+            Register
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}
