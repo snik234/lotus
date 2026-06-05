@@ -61,6 +61,8 @@ class Profile(models.Model):
 
     phone = models.CharField(max_length=20, blank=True)
 
+    telegram_chat_id = models.CharField(max_length=50, blank=True, null=True, help_text="ID чату в Telegram для отримання заявок")
+
     def __str__(self):
         return self.user.username
 

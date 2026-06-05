@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from cars.views import home, car_list, car_detail, profile, register, edit_profile, test_drive
+from cars.views import home, car_list, car_detail, profile, register, edit_profile, test_drive, add_car, heritage
 
 
 from django.conf import settings
@@ -32,6 +32,8 @@ urlpatterns = [
     path('register/', register),
     path('profile/edit/', edit_profile),
     path('test-drive/', test_drive, name='test_drive'),
+    path('cars/add/', add_car, name='add_car'),
+    path('heritage/', heritage, name='heritage'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

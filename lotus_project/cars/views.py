@@ -8,7 +8,8 @@ from .forms import ProfileForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import requests
-
+from .forms import CarForm, MultipleImageForm
+from .models import CarImage
 
 def home(request):
     cars = Car.objects.all().order_by('-created_at')[:3]
@@ -17,7 +18,7 @@ def home(request):
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         message = request.POST.get('message')
-        car_title = request.POST.get('car_title')  # Ловим имя машины из поп-апа
+        car_title = request.POST.get('car_title')
 
         TOKEN = "8534272227:AAFsfv9AfyjY6A5dZztmImpBFskilCyNaqg"
         CHAT_ID = "5759586456"
@@ -62,13 +63,19 @@ def car_detail(request, id):
         TOKEN = "8534272227:AAFsfv9AfyjY6A5dZztmImpBFskilCyNaqg"
         CHAT_ID = "5759586456"
 
+        try:
+            tg_user = car.owner.profile.telegram_username
+            seller_tg = f"@{tg_user}" if tg_user else car.owner.username
+        except Exception:
+            seller_tg = car.owner.username
+
         text_message = (
-            f"*Нова заява на Lotus* \n\n"
-            f"*Модель:* {car.title}\n"
-            f"*Ціна:* {car.price} {car.currency}\n"
-            f"*Ім'я:* {name}\n"
-            f"*Телефон:* {phone}\n"
-            f"*Комментар:* {message}"
+            f" *Замовлення дзвінка* \n\n"
+            f" *Автомобіль:* {car.title}\n"
+            f" *Продавець:* {car.owner.username}\n"
+            f" *Покупець:* {name}\n"
+            f" *Телефон:* {phone}\n"
+            f" *Коментар:* {message}"
         )
 
         url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
@@ -198,3 +205,29 @@ def edit_profile(request):
     return render(request, 'edit_profile.html', {
         'form': form
     })
+
+
+@login_required
+def add_car(request):
+    if request.method == 'POST':
+        car_form = CarForm(request.POST, request.FILES)
+        image_form = MultipleImageForm(request.POST, request.FILES)
+
+        files = request.FILES.getlist('images')
+
+        if car_form.is_valid() and image_form.is_valid():
+            car = car_form.save(commit=False)
+            car.owner = request.user
+            car.save()
+            for f in files:
+                CarImage.objects.create(car=car, image=f)
+
+            messages.success(request, f'Автомобіль {car.title} Успішно додано та опубліковано!')
+            return redirect('/cars/')
+    else:
+        car_form = CarForm()
+
+    return render(request, 'add_car.html', {'car_form': car_form})
+
+def heritage(request):
+    return render(request, 'heritage.html')

@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="heritage-container">
+    <div class="heritage-header">
+        <h1>LOTUS HERITAGE</h1>
+        <p class="subtitle">Видання легенди: від дерев'яного гаражу до вершин світового автоспорту</p>
+    </div>
+
+    <div class="timeline">
+        
+        <div class="timeline-item">
+            <div class="timeline-year">1948</div>
+            <div class="timeline-content">
+                <h3>Зародження легенди (Mark I)</h3>
+                <p>Колін Чепмен збирає свій перший гоночний автомобіль Mark I в дерев'яному гаражі своєї дівчини. Цей момент назавжди визначив філософію бренду: максимальне полегшення конструкції замість бездумного збільшення потужності.</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-year">1962</div>
+            <div class="timeline-content">
+                <h3>Революція у Формулі-1</h3>
+                <p>Поява легендарного боліда Lotus 25. Чепмен вперше в історії автоспорту застосував концепцію монокока. Команда Team Lotus починає трощити суперників на світових треках, завойовуючи один титул за іншим.</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-year">1976</div>
+            <div class="timeline-content">
+                <h3>Культовий статус Esprit</h3>
+                <p>Запуск виробництва суперкара Lotus Esprit з гранованим дизайном "Folded Paper" від маестро Джорджетто Джуджаро. Машина набуває світового голлівудського статусу після того, як перетворилася на підводний човен у фільмі про Джеймса Бонда «Шпигун, який мене любив».</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-year">2020+</div>
+            <div class="timeline-content">
+                <h3>Електричне майбутнє</h3>
+                <p>Lotus повідомляє про перехід на чисту електротягу. Бренд шокує світ гіперкаром Evija потужністю 2000 к.с. і випускає свої перші люксові електричні кросовери Eletre та седани Emeya, зберігаючи еталонну керованість.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .heritage-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 60px 20px;
+        font-family: sans-serif;
+    }
+    .heritage-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    .heritage-header h1 {
+        color: #fff;
+        font-size: 42px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        margin: 0 0 10px 0;
+    }
+    .heritage-header .subtitle {
+        color: #666;
+        font-size: 16px;
+    }
+
+    /* Таймлайн линия */
+    .timeline {
+        position: relative;
+        border-left: 2px solid #222;
+        padding-left: 30px;
+        margin-left: 20px;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 50px;
+    }
+
+    /* Кружочек на линии */
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -41px;
+        top: 5px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #111;
+        border: 2px solid #fdd835;
+        box-shadow: 0 0 10px rgba(253, 216, 53, 0.4);
+    }
+
+    .timeline-year {
+        color: #fdd835;
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .timeline-content {
+        background: #141414;
+        border: 1px solid #222;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .timeline-content h3 {
+        color: #fff;
+        font-size: 18px;
+        margin: 0 0 10px 0;
+        font-weight: 700;
+    }
+
+    .timeline-content p {
+        color: #aaa;
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0;
+    }
+</style>
+{% endblock %}

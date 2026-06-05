@@ -35,16 +35,47 @@
     {{ car.description }}
 </div>
 
-<div class="contact-box">
-    <h2 style="color: white; margin-bottom: 25px; text-align: center;">Contact seller</h2>
+<div class="contact-box" style="max-width: 850px; margin: 40px auto 50px; padding: 40px; background: #111; border: 1px solid #222; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-family: sans-serif;">
+
+    <div class="seller-card" style="display: flex; align-items: center; gap: 20px; padding-bottom: 25px; margin-bottom: 30px; border-bottom: 1px solid #222; text-align: left;">
+        {% if car.owner.profile.avatar %}
+            <img src="{{ car.owner.profile.avatar.url }}" style="width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 2px solid #fdd835; box-shadow: 0 0 15px rgba(253, 216, 53, 0.2);">
+        {% else %}
+            <div style="width: 75px; height: 75px; border-radius: 50%; background: #222; display: flex; align-items: center; justify-content: center; font-size: 28px; border: 2px solid #333; color: #666;">👤</div>
+        {% endif %}
+
+        <div style="flex: 1;">
+            <h3 style="color: white; margin: 0 0 5px 0; font-size: 19px; font-weight: 700;">Продавець: {{ car.owner.username }}</h3>
+
+            <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                {% if car.owner.profile.phone %}
+                    <span style="color: #fdd835; font-size: 14px; font-weight: 600;"> {{ car.owner.profile.phone }}</span>
+                {% endif %}
+
+                {% if car.owner.profile.telegram_username %}
+                    <a href="https://t.me{{ car.owner.profile.telegram_username }}" target="_blank" style="color: #00a2ff; text-decoration: none; font-size: 12px; font-weight: 700; background: rgba(0, 162, 255, 0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(0, 162, 255, 0.2); transition: all 0.3s ease;">
+                         Написати в Telegram
+                    </a>
+                {% endif %}
+            </div>
+
+            {% if car.owner.profile.bio %}
+                <p style="color: #666; margin: 8px 0 0 0; font-size: 13px; font-style: italic;">"{{ car.owner.profile.bio }}"</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <h2 style="color: white; margin-bottom: 10px; text-align: center; font-weight: 700; font-size: 22px; letter-spacing: 0.5px;">Замовити зворотній дзвінок</h2>
+    <p style="color: #666; text-align: center; font-size: 14px; margin-bottom: 25px;">Залиште свої контакти, і ми зв'яжемося з вами найближчим часом.</p>
+
     <form method="post" class="modern-form">
         {% csrf_token %}
         <div class="row">
-            <input type="text" name="name" placeholder="Your name" required>
-            <input type="text" name="phone" placeholder="Phone" required>
+            <input type="text" name="name" placeholder="Ваше ім'я" required>
+            <input type="text" name="phone" placeholder="Номер телефону" required>
         </div>
-        <textarea name="message" placeholder="I'm interested in this car..."></textarea>
-        <button type="submit" class="submit-btn">SEND REQUEST</button>
+        <textarea name="message" placeholder="Я зацікавлений у купівлі цього Lotus. Коли вам зручно зателефонувати?"></textarea>
+        <button type="submit" class="submit-btn">Замовити дзвінок</button>
     </form>
 </div>
 

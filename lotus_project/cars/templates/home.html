@@ -132,7 +132,7 @@
         {
             title: "{{ car.title }}",
             detailsUrl: "/cars/{{ car.id }}/",
-            videoUrl: "{% if 'esprit' in car.title.lower %}{% static 'videos/esprit.mp4' %}{% elif 'eletre' in car.title.lower %}{% static 'videos/eletre.mp4' %}{% else %}{% static 'videos/emira_card.mp4' %}{% endif %}",
+            videoUrl: "{% if 'esprit' in car.title.lower %}{% static 'videos/lotus_esprit_se.mp4' %}{% elif 'evija' in car.title.lower %}{% static 'videos/evija.mp4' %}{% else %}{% static 'videos/emira_first.mp4' %}{% endif %}",
             badgeText: "{% if 'esprit' in car.title.lower %}• CLASSIC LEGEND{% elif 'eletre' in car.title.lower %}• 100% ELECTRIC{% else %}• TRACK READY{% endif %}",
             badgeClass: "{% if 'esprit' in car.title.lower %}badge-orange{% elif 'eletre' in car.title.lower %}badge-blue{% else %}badge-yellow{% endif %}"
         }{% if not forloop.last %},{% endif %}
@@ -140,44 +140,52 @@
     ];
 
     let currentSlideIndex = 0;
-
     function updateSlider() {
         if (slidesData.length === 0) return;
         const currentData = slidesData[currentSlideIndex];
         const videoEl = document.getElementById('sliderVideo');
         const contentBox = document.getElementById('sliderContentBox');
 
-        videoEl.style.opacity = 0;
-        contentBox.style.opacity = 0;
+        if (videoEl) videoEl.style.opacity = 0;
+        if (contentBox) contentBox.style.opacity = 0;
 
         setTimeout(() => {
-            videoEl.src = currentData.videoUrl;
+            if (videoEl) videoEl.src = currentData.videoUrl;
 
-            document.getElementById('slideTitle').innerText = currentData.title;
-            document.getElementById('slideDetailsBtn').href = currentData.detailsUrl;
+            const titleEl = document.getElementById('slideTitle');
+            const detailsBtn = document.getElementById('slideDetailsBtn');
+            const badgeEl = document.getElementById('slideBadge');
 
-            const badge = document.getElementById('slideBadge');
-            badge.innerText = currentData.badgeText;
-            badge.className = "slide-status-badge " + currentData.badgeClass;
+            if (titleEl) titleEl.innerText = currentData.title;
+            if (detailsBtn) detailsBtn.href = currentData.detailsUrl;
 
-            videoEl.style.opacity = 1;
-            contentBox.style.opacity = 1;
+            if (badgeEl) {
+                badgeEl.innerText = currentData.badgeText;
+                badgeEl.className = "slide-status-badge " + currentData.badgeClass;
+            }
+
+            if (videoEl) videoEl.style.opacity = 1;
+            if (contentBox) contentBox.style.opacity = 1;
         }, 150);
     }
-
     function changeSlide(direction) {
         currentSlideIndex = (currentSlideIndex + direction + slidesData.length) % slidesData.length;
         updateSlider();
     }
-
     function openOrderModalFromSlider() {
         const currentData = slidesData[currentSlideIndex];
-        document.getElementById('modalCarName').innerText = currentData.title;
-        document.getElementById('hiddenCarTitle').value = currentData.title;
-        document.getElementById('orderModal').style.display = 'flex';
-    }
+        const modalCarName = document.getElementById('modalCarName');
+        const hiddenCarTitle = document.getElementById('hiddenCarTitle');
+        const orderModal = document.getElementById('orderModal');
 
-    function closeOrderModal() { document.getElementById('orderModal').style.display = 'none'; }
+        if (modalCarName) modalCarName.innerText = currentData.title;
+        if (hiddenCarTitle) hiddenCarTitle.value = currentData.title;
+        if (orderModal) orderModal.style.display = 'flex';
+    }
+    function closeOrderModal() {
+        const orderModal = document.getElementById('orderModal');
+        if (orderModal) orderModal.style.display = 'none';
+    }
     window.onclick = function(event) {
         const modal = document.getElementById('orderModal');
         if (event.target == modal) modal.style.display = 'none';
